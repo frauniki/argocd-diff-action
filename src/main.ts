@@ -116,7 +116,7 @@ async function getApps(): Promise<App[]> {
       headers: { Cookie: `argocd.token=${ARGOCD_TOKEN}` },
       httpsAgent: new https.Agent({ rejectUnauthorized: !INSECURE })
     })
-    responseJson = await response.data()
+    responseJson = await response.data
   } catch (e) {
     core.error(e as Error)
   }
@@ -290,7 +290,7 @@ async function run(): Promise<void> {
   }
 }
 
-await (async () => {
+;(async () => {
   try {
     await run()
   } catch (e) {

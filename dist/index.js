@@ -36347,7 +36347,7 @@ if (PLAINTEXT) {
 }
 const octokit = github.getOctokit(githubToken);
 async function execCommand(command, options = {}) {
-    const p = new Promise(async (done, failed) => {
+    const p = new Promise((done, failed) => {
         (0, child_process_1.exec)(command, options, (err, stdout, stderr) => {
             const res = {
                 stdout,
@@ -36392,14 +36392,16 @@ async function getApps() {
             headers: { Cookie: `argocd.token=${ARGOCD_TOKEN}` },
             httpsAgent: new https_1.default.Agent({ rejectUnauthorized: !INSECURE })
         });
-        responseJson = await response.data();
+        responseJson = await response.data;
     }
     catch (e) {
         core.error(e);
     }
     return responseJson.items.filter(app => {
         const targetRevision = app.spec.source.targetRevision;
-        const targetPrimary = targetRevision === 'master' || targetRevision === 'main' || !targetRevision;
+        const targetPrimary = targetRevision === 'master' ||
+            targetRevision === 'main' ||
+            !targetRevision;
         return (app.spec.source.repoURL.includes(`${github.context.repo.owner}/${github.context.repo.repo}`) && targetPrimary);
     });
 }
@@ -36531,7 +36533,15 @@ async function run() {
         core.setFailed(`ArgoCD diff failed: Encountered ${diffsWithErrors.length} errors`);
     }
 }
-run().catch(e => core.setFailed(e.message));
+;
+(async () => {
+    try {
+        await run();
+    }
+    catch (e) {
+        core.setFailed(e.message);
+    }
+})();
 
 
 /***/ }),
